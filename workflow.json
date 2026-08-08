@@ -1,0 +1,140 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "49ceb5cc-dc39-4a07-89f1-2c5a7f4bce89",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://dummyjson.com/quotes/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "24c3d115-0f8b-4ff4-8e96-34078300581f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "1930888133",
+        "text": "=📜 Quote of the day:\n   {{ $('HTTP Request').item.json.quote }}\n   — {{ $('HTTP Request').item.json.author }}\n\n   🌐 Urdu Translation:\n   {{ $json.output[0].content[0].text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        544,
+        0
+      ],
+      "id": "d7e87a09-2b4e-4683-868f-92e329158354",
+      "name": "Send a text message",
+      "webhookId": "c49679a6-6b89-4d95-9475-136c0cc7c902",
+      "credentials": {
+        "telegramApi": {
+          "id": "GR6SeQjswJvNjDvJ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Translate the following quote into Urdu. Only return the translated text, nothing else — no quotation marks, no extra commentary.\n\nQuote: \"{{ $json.quote }}\""
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        160,
+        0
+      ],
+      "id": "3597dc92-8667-4363-9814-3422b1489d97",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cPm7IL6yllz615IE",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "26d76cc2-0265-4c68-98c3-6e3329b2f3d9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8468b409254a0d65c1bf94a048ac68ecb69457c26af1316a8cfbadfdaddc37e"
+  },
+  "nodeGroups": [],
+  "id": "lN99Qq9gRt1lEmwS",
+  "tags": []
+}s
